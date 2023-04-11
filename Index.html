@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  
+    <?!= include('CSS'); ?>
+
+  </head>
+  <body>
+    <!-- form bootstrap -->
+    <div class="container row">
+      <form>
+        <h2 >LECTOR</h2>
+        <div class="mb-3 col-sm"> 
+          <label for="exampleInputEmail1" class="form-label">GUIA INTERNACIONAL</label>
+          <input type="text" class="form-control" id="guiaInt" onchange="guiaNac.focus()" required>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">GUIA NACIONAL</label>
+          <input type="text" class="form-control" id="guiaNac" onchange="enviar()" required>
+        </div>
+        <div id="validacion">
+          <p id="p"></p>
+        </div>  
+      </form>
+    </div>
+
+    <!-- <div class="container"  >
+      <form>
+        <div class="mb-3">
+          
+            <div id="validacion">
+              <p id="p"></p>
+            </div>
+          </div>
+        </div>
+      </form> 
+    </div>  -->
+      
+    <script>
+     
+      document.getElementById('guiaInt').focus();
+      function enviar(){
+        var guiaInt = document.getElementById('guiaInt').value;
+        var guiaNac = document.getElementById('guiaNac').value; 
+        // coneccion con el servidor de google(sheet)
+        google.script.run.withSuccessHandler(recibe).busquedaGuiaRemito(guiaInt,guiaNac);
+        
+      }
+      
+      function recibe(dato){
+        
+        console.log(dato)
+        if(dato == "Validacion OK"){
+          
+          document.getElementById('guiaInt').value='';
+          document.getElementById('guiaNac').value='';
+          document.getElementById('guiaInt').focus();
+       
+          document.getElementById("p").innerHTML=dato;
+          document.getElementById("div").style.backgroundColor = "#1BF55B";
+          document.getElementById("div").style.display= 'block';
+          setTimeout(function(){
+            document.getElementById("div").style.display ='none';
+          }, 2000);
+          
+          
+        }if(dato == "Validacion NO OK"){
+          document.getElementById('guiaNac').focus()
+          document.getElementById('guiaNac').value='';
+          document.getElementById("p").innerHTML=dato;
+
+          document.getElementById("div").style.backgroundColor = 'red';
+          document.getElementById("div").style.display= 'block';
+          setTimeout(function(){
+            document.getElementById("div").style.display ='none';
+          }, 2000);
+
+          
+        
+          
+        }if(dato == "NO EXISTE"){
+          document.getElementById('guiaInt').value='';
+          document.getElementById('guiaNac').value='';
+          
+
+          document.getElementById("p").innerHTML=dato;
+          document.getElementById("div").style.backgroundColor = 'red';
+          document.getElementById("div").style.display= 'block';
+          document.getElementById('guiaInt').focus();
+          setTimeout(function(){
+            document.getElementById("div").style.display ='none';
+          }, 2000);
+          
+        }
+      }
+    </script>
+  </body>
+</html>
